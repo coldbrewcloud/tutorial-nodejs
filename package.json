@@ -1,0 +1,9 @@
+{
+    "name": "tutorial-nodejs",
+    "version": "1.0.0",
+    "main": "hello.js",
+    "private": true,
+    "scripts": {
+        "start": "node hello.js"
+    }
+}
