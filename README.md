@@ -113,6 +113,45 @@ coldbrew status
 
 <img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-status-2.gif?v=1" width="800">
 
-## Testing App
+## Testing the Application
 
-....working on it...
+To know if your application is up and running, check [status](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-status) command output:
+- Make sure ELB Load Balancer's Status becomes `active`.
+- Make sure you have more than 1 ECS Task has running status (`RUNNING/RUNNING`).
+
+Assuming it's all good, let's test if your Node.JS application really works. Again check [status](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-status) command output to find the Load Balancer endpoint _(`http://tutorial-nodejs-elb-37144599.us-west-2.elb.amazonaws.com:80` in my example run)_. Then run this:
+
+```bash
+$ curl -i http://tutorial-nodejs-elb-37144599.us-west-2.elb.amazonaws.com:80
+HTTP/1.1 200 OK
+Date: Tue, 01 Nov 2016 19:43:58 GMT
+Content-Type: text/plain
+Content-Length: 13
+Connection: keep-alive
+
+Hello, World
+```
+
+It looks like it really works as we expect.
+
+## Cleaning Up
+
+When you no long need to run your application in AWS, you can use [delete](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-delete) command to clean up all AWS resources that were used to run your application.
+
+```bash
+coldbrew delete
+```
+
+<img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-delete.gif?v=1" width="800">
+
+_*Note that cleanining up can take several minutes to finish to make sure all AWS resources are properly deleted or updated._
+
+And, if you need to delete the cluster too, you can [cluster-delete](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-cluster-delete) command. 
+
+```bash
+coldbrew cluster-delete tutorial
+```
+
+<img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-cluster-delete.gif?v=1" width="800">
+
+_*For the same reason, cluster delete can take long to finish._
