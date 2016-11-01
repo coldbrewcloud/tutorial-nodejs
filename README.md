@@ -30,6 +30,7 @@ This tutorial project contains the bare minimum _(but fully functional)_ sample 
 - A sample **coldbrew-cli** app configuration file, [coldbrew.conf](https://github.com/coldbrewcloud/tutorial-nodejs/blob/master/coldbrew.conf)
 
 Clone this repo:
+
 ```bash
 git clone https://github.com/coldbrewcloud/tutorial-nodejs.git
 cd tutorial-nodejs
@@ -37,4 +38,81 @@ cd tutorial-nodejs
 
 ## Creating Your First Cluster
 
-.... (working on it)
+**coldbrew-cli** has _very_ simple [concepts](https://github.com/coldbrewcloud/coldbrew-cli/wiki/Concepts): clusters and applications (apps). An app is the minimum deployment unit and _typically_ it correponds to a project (like this tutorial project). And a cluster is simply a collection of apps who will share some AWS resources. _Most importantly they share the Docker hosts (which is ECS Container Instances in the AWS context)._
+
+Let's create your first cluster `tutorial` using [cluster-create](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-cluster-create) command:
+
+```bash
+coldbrew cluster-create tutorial --disable-keypair
+```
+
+<img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-cluster-create.gif?v=1" width="800">
+
+_*In this tutorial, we used `--disable-keypair` flag to skip assigning EC2 key pairs to the container instances. If you will need a direct access to the instances (e.g. via SSH), you can use `--key` flag to specify your key pair name._
+
+
+If you want to check the current running status of your first cluster, you can use [cluster-status]((https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-cluster-status) command:
+
+```bash
+coldbrew cluster-status tutorial
+```
+
+It can take several minutes until the initial ECS Container Instances (EC2 Instances) become fully available, but, you can continue on to start deploying your applicaiton.
+
+<img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-cluster-status.gif?v=1" width="800">
+
+## Deploying Your Application
+
+Now it's time to deploy your app for the first time. All you need is an application [configuration file](https://github.com/coldbrewcloud/coldbrew-cli/wiki/Configuration-File) to define your app's deployment settings. You can easily create it on your own, or, you can use [init](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-init) command to generate a proper default configuration for your app. In this tutorial, we provide a sample [coldbrew.conf](https://github.com/coldbrewcloud/tutorial-nodejs/blob/master/coldbrew.conf) file so we can start quickly.
+
+To deploy your application, you use [deploy](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-deploy) command:
+
+```bash
+coldbrew deploy
+```
+
+<img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-deploy.gif?v=1" width="800">
+
+You just ran a single command line, but, what's realy happening here is:
+- **coldbrew-cli** builds local Docker image using [Dockerfile](https://github.com/coldbrewcloud/tutorial-nodejs/blob/master/Dockerfile). _(You can skip this if you provide the local image name using `--docker-image` flag directly.)_
+- It pushes the Docker image to ECR Repository that's created for your application.
+- It creates, updates, or, configures ECS Task Definition and ECS Service to apply your configurations.
+- It also creates or configures an ELB Application Load Balanacer if your application needs a load balancer. _(This tutorial enables the load balancer.)_
+
+Now let's check the application status using [status](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-status) command:
+
+```bash
+coldbrew status
+```
+
+<img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-status.gif?v=1" width="800">
+
+It gives you much more details about your application and its related AWS resources.
+
+_*Again, it will take several minutes until all AWS resources get fully provisioned and become active (especially if you enabled load balancer). But, the next deploys will be much faster, typically within a minute._
+
+#### Deploying Again
+
+After the first deploy, whenever you have changes in your code or configurations, you can re-deploy them again using the same [deploy](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-deploy) command. In this example, I made a simple change in `.units` attributes in the configuration file: from `1` tom `2`.
+
+```bash
+coldbrew deploy
+```
+
+<img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-deplpy-2.gif?v=1" width="800">
+
+You will notice that **coldbrew-cli** did not create a new AWS resources this time because they were already created during the first deploy run. **coldbrew-cli** always tries to minimize the actual AWS changes by analyzing and comparing the current status and the desired status.
+
+_*Note that not all configuration changes will be applied immediately. See [this](https://github.com/coldbrewcloud/coldbrew-cli/wiki/Configuration-Changes-and-Their-Effects) for more details._
+
+Let's run [status](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-status) command again:
+
+```bash
+coldbrew status
+```
+
+<img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-status-2.gif?v=1" width="800">
+
+## Testing App
+
+....working on it...
