@@ -155,3 +155,9 @@ coldbrew cluster-delete tutorial
 <img src="https://raw.githubusercontent.com/coldbrewcloud/assets/master/coldbrew-cli/tutorial-nodejs-cluster-delete.gif?v=1" width="800">
 
 _*For the same reason, cluster delete can take long to finish._
+
+---
+
+That's it for the tutorial. Now you know how to run your Node.JS applications on AWS using [coldbrew-cli](https://github.com/coldbrewcloud/coldbrew-cli). Although this tutorial used a sample Node.JS application, but, deployment workflow of **coldbrew-cli** for other tech stacks is almost the same, as long as you have your Dockerfile in place.
+
+See [Documentations](https://github.com/coldbrewcloud/coldbrew-cli/wiki) for more details.
