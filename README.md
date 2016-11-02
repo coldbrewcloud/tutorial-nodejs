@@ -51,7 +51,7 @@ coldbrew cluster-create tutorial --disable-keypair
 _*In this tutorial, we used `--disable-keypair` flag to skip assigning EC2 key pairs to the container instances. If you will need a direct access to the instances (e.g. via SSH), you can use `--key` flag to specify your key pair name._
 
 
-If you want to check the current running status of your first cluster, you can use [cluster-status]((https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-cluster-status) command:
+If you want to check the current running status of your first cluster, you can use [cluster-status](https://github.com/coldbrewcloud/coldbrew-cli/wiki/CLI-Command:-cluster-status) command:
 
 ```bash
 coldbrew cluster-status tutorial
